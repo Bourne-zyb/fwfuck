@@ -1,0 +1,337 @@
+#include "main.h"
+#include "System.h"
+#include "stm32g0xx_it.h"
+#include "stdint.h"
+#include "string.h"
+#include "drv_adc.h"
+#include "drv_uart.h"
+#include "drv_hall.h"
+
+uint16_t PinState[15];
+
+
+
+uint16_t ADC_Value_Temp[5][5];
+uint16_t ADC_Value[5];
+void ADC_RefreshValues( void )
+{
+    static uint8_t n = 0;
+    uint16_t ADC_Max = 0, ADC_Min = 0xFFFF, ADC_Value_Temp1;
+    uint16_t ADC_Value_Sum;
+
+
+    if ( n < 4 )
+    {
+        ADC_Value_Temp[0][n] = ADC_Sampling[0];
+        ADC_Value_Temp[1][n] = ADC_Sampling[1];
+        ADC_Value_Temp[2][n] = ADC_Sampling[2];
+        ADC_Value_Temp[3][n] = ADC_Sampling[3];
+        ADC_Value_Temp[4][n] = ADC_Sampling[4];
+        n++;
+    }
+    else
+    {
+        n = 0;
+
+        for ( uint8_t i = 0; i < 5; i++)
+        {
+            for ( uint8_t j = 0; j < 5; j++)
+            {
+                ADC_Value_Temp1 = ADC_Value_Temp[i][j];
+
+                if ( ADC_Max < ADC_Value_Temp1 )
+                {
+                    ADC_Max = ADC_Value_Temp1;
+                }
+                if ( ADC_Min > ADC_Value_Temp1 )
+                {
+                    ADC_Min = ADC_Value_Temp1;
+                }
+
+                ADC_Value_Sum += ADC_Value_Temp1;
+
+            }
+
+            ADC_Value[i] = ( ADC_Value_Sum - ADC_Max- ADC_Min ) / 3;
+
+            ADC_Max = 0;
+            ADC_Min = 0xFFFF;
+            ADC_Value_Sum = 0;
+        }
+    }
+
+}
+
+uint8_t Key_Count[15];
+uint8_t Key_State[15];
+void KeyPress_Handle( GPIO_TypeDef *GPIO, uint16_t GPIO_Pin, uint8_t Index )
+{
+    if ( !HAL_GPIO_ReadPin(GPIO, GPIO_Pin) )
+    {
+        if ( Key_Count[Index] < KEY_PRESS_TIME )
+        {
+            Key_Count[Index] = KEY_PRESS_TIME;
+        }
+        else if ( Key_Count[Index] < 2 * KEY_PRESS_TIME )
+        {
+            Key_Count[Index]++;
+        }
+        else if ( !(Key_State[Index]&0x01)  )
+        {
+            Key_State[Index] |= 0x01;
+            Key_State[Index] ^= 0x02;
+
+            if ( Key_State[Index]&0x10 )
+            {
+                if ( Key_State[Index]&0x02 )
+                {
+                    /* Buzzer */
+                }
+            }
+        }
+
+    }
+    else
+    {
+        if ( Key_Count[Index] > KEY_PRESS_TIME )
+        {
+            Key_Count[Index] = KEY_PRESS_TIME;
+        }
+        else if ( Key_Count[Index] )
+        {
+            Key_Count[Index]--;
+        }
+        else
+        {
+            Key_State[Index] &= ~0x01;
+            Key_State[Index] |= 0x10;
+        }
+    }
+}
+
+
+void LockKey_Handle( GPIO_TypeDef *GPIO, uint16_t GPIO_Pin, uint8_t Index )
+{
+    if ( !HAL_GPIO_ReadPin(GPIO, GPIO_Pin) )
+    {
+        if ( Key_Count[Index] < KEY_PRESS_TIME )
+        {
+            Key_Count[Index] = KEY_PRESS_TIME;
+        }
+        else if ( Key_Count[Index] < 2 * KEY_PRESS_TIME )
+        {
+            Key_Count[Index]++;
+        }
+        else
+        {
+            if ( 10 == Index  )
+            {
+                SamplingValue.LockSWL = 1;
+            }
+            else
+            {
+                SamplingValue.LockSWR = 1;
+            }
+        }
+
+    }
+    else
+    {
+        if ( Key_Count[Index] > KEY_PRESS_TIME )
+        {
+            Key_Count[Index] = KEY_PRESS_TIME;
+        }
+        else if ( Key_Count[Index] )
+        {
+            Key_Count[Index]--;
+        }
+        else
+        {
+            if ( 10 == Index  )
+            {
+                SamplingValue.LockSWL = 0;
+            }
+            else
+            {
+                SamplingValue.LockSWR = 0;
+            }
+        }
+    }
+
+}
+
+
+void Channel_Calculate( void )
+{
+    PinState[0] = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
+
+    {
+        //霍尔mini
+        SamplingValue.LHallstickX = HallSticks.Channels[0].RealValue;
+        SamplingValue.LHallstickY = HallSticks.Channels[1].RealValue;
+        SamplingValue.RHallstickX = HallSticks.Channels[2].RealValue;
+        SamplingValue.RHallstickY = HallSticks.Channels[3].RealValue;
+    }
+
+
+
+    {
+        //四向
+        SamplingValue.JoystickX = ADC_Value[2];
+        SamplingValue.JoystickY = ADC_Value[3];
+    }
+
+    {
+        //V1/V2
+        SamplingValue.RotaryVR1 = ADC_Value[0];
+        SamplingValue.RotaryVR2 = ADC_Value[1];
+    }
+
+    {
+        //five
+        if ( (ADC_Value[4] < FIVESTICKL_UP_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKL_UP_ADC - DEADZONE) )
+        {
+            SamplingValue.Fivestick = 1;
+        }
+        else if ( (ADC_Value[4] < FIVESTICKL_DOWN_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKL_DOWN_ADC - DEADZONE) )
+        {
+            SamplingValue.Fivestick = 2;
+        }
+        else if ( (ADC_Value[4] < FIVESTICKR_UP_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKR_UP_ADC - DEADZONE) )
+        {
+            SamplingValue.Fivestick = 3;
+        }
+        else if ( (ADC_Value[4] < FIVESTICKR_DOWN_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKR_DOWN_ADC - DEADZONE) )
+        {
+            SamplingValue.Fivestick = 4;
+        }
+        else if ( (ADC_Value[4] < FIVESTICK_CENTER_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICK_CENTER_ADC - DEADZONE) )
+        {
+            SamplingValue.Fivestick = 5;
+        }
+        else
+        {
+            SamplingValue.Fivestick = 0;
+        }
+    }
+
+    {
+        //Joystick Center
+        KeyPress_Handle( GPIOB, GPIO_PIN_4, 12 );
+        SamplingValue.JoystickC = (Key_State[12] & 0x01)? 1 : 0;
+
+    }
+
+    {//VR3
+        static uint32_t State_Ms;
+        static uint8_t Last_StateA;
+        uint8_t Current_StateA = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14);
+        uint8_t Current_StateB = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15);
+
+        if ( Last_StateA != Current_StateA )
+        {
+            if ( SYS_SysTickMs - State_Ms > 30 )
+            {
+                State_Ms = SYS_SysTickMs;
+                if ( Current_StateA == Current_StateB )
+                {
+                    SamplingValue.Coder = 0;//Left
+                }
+                else
+                {
+                    SamplingValue.Coder = 2;//Right
+                }
+            }
+            Last_StateA = Current_StateA;
+        }
+        else if ( (Last_StateA == Current_StateA) && SYS_SysTickMs - State_Ms > 500 )
+        {
+            SamplingValue.Coder = 1;
+        }
+    }
+
+
+    {//三档拨杆
+        uint8_t ToggleSW_L;
+        uint8_t ToggleSW_R;
+
+        ToggleSW_L = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
+        ToggleSW_R = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
+
+        if ( !ToggleSW_L && ToggleSW_R )
+        {
+            SamplingValue.ToggleSW = 0;
+        }
+        else if ( ToggleSW_L && !ToggleSW_R )
+        {
+            SamplingValue.ToggleSW = 2;
+        }
+        else
+        {
+            SamplingValue.ToggleSW = 1;
+        }
+    }
+
+    {//船型三档
+        uint8_t ShipSW_L;
+        uint8_t ShipSW_R;
+
+        ShipSW_L = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_6);
+        ShipSW_R = HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_7);
+
+        if ( !ShipSW_L && ShipSW_R )
+        {
+            SamplingValue.ShipSW = 0;
+        }
+        else if ( ShipSW_L && !ShipSW_R )
+        {
+            SamplingValue.ShipSW = 2;
+        }
+        else
+        {
+            SamplingValue.ShipSW = 1;
+        }
+    }
+
+
+    {//SW3、SW4
+        LockKey_Handle( GPIOC, GPIO_PIN_13, 10 );
+        LockKey_Handle( GPIOA, GPIO_PIN_10, 11 );
+    }
+
+    {//K1~K10
+        KeyPress_Handle( GPIOA, GPIO_PIN_15, 0 );
+        SamplingValue.SW1 = (Key_State[0] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOD, GPIO_PIN_0, 1 );
+        SamplingValue.SW2 = (Key_State[1] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOD, GPIO_PIN_1, 2 );
+        SamplingValue.SW3 = (Key_State[2] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOD, GPIO_PIN_2, 3 );
+        SamplingValue.SW4 = (Key_State[3] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOD, GPIO_PIN_3, 4 );
+        SamplingValue.SW5 = (Key_State[4] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOB, GPIO_PIN_5, 5 );
+        SamplingValue.SW6 = (Key_State[5] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOB, GPIO_PIN_3, 6 );
+        SamplingValue.SW7 = (Key_State[6] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOA, GPIO_PIN_8, 7 );
+        SamplingValue.SW8 = (Key_State[7] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOA, GPIO_PIN_9, 8 );
+        SamplingValue.SW9 = (Key_State[8] & 0x01)? 1 : 0;
+
+        KeyPress_Handle( GPIOC, GPIO_PIN_6, 9 );
+        SamplingValue.SW10 = (Key_State[9] & 0x01)? 1 : 0;
+    }
+
+}
+
+
+
