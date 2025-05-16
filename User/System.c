@@ -7,6 +7,7 @@
 #include "drv_uart.h"
 #include "drv_hall.h"
 
+
 uint16_t PinState[15];
 
 
@@ -163,22 +164,56 @@ void LockKey_Handle( GPIO_TypeDef *GPIO, uint16_t GPIO_Pin, uint8_t Index )
 
 void Channel_Calculate( void )
 {
-    PinState[0] = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
 
+    PinState[0] = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
     {
-        //»ô¶ûmini
-        SamplingValue.LHallstickX = HallSticks.Channels[0].RealValue;
-        SamplingValue.LHallstickY = HallSticks.Channels[1].RealValue;
-        SamplingValue.RHallstickX = HallSticks.Channels[2].RealValue;
-        SamplingValue.RHallstickY = HallSticks.Channels[3].RealValue;
+        //»ô¶ûmini	
+        //HAL_UART_Receive_IT(&huart1, datarecv111, 28);
+				HAL_UART_Receive(&huart1, datarecv111, 28, 10);
+				if(1 == extract_valid_frame(datarecv111, 28, &frameData)){
+            if((frameData.stickState & 0x01) == 0x01){
+                SamplingValue.LHallstickX = frameData.ch[0];
+                SamplingValue.LHallstickY = frameData.ch[1];
+            }else{
+                SamplingValue.LHallstickX = FRAME_ERR;
+                SamplingValue.LHallstickY = FRAME_ERR;
+            }
+            if((frameData.stickState & 0x10) == 0x10){
+                SamplingValue.RHallstickX = frameData.ch[2];
+                SamplingValue.RHallstickY = frameData.ch[3];
+            }else{
+                SamplingValue.RHallstickX = FRAME_ERR;
+                SamplingValue.RHallstickY = FRAME_ERR;
+            }
+        }
+
+				 SEGGER_RTT_printf(0, "LHX:0x%04X LHY:0x%04X RHX:0x%04X RHY:0x%04X JX:0x%04X JY:0x%04X VR1:0x%04X VR2:0x%04X\r\n",
+						 SamplingValue.LHallstickX, SamplingValue.LHallstickY,
+						 SamplingValue.RHallstickX, SamplingValue.RHallstickY,
+						 SamplingValue.JoystickX, SamplingValue.JoystickY,
+						 SamplingValue.RotaryVR1, SamplingValue.RotaryVR2
+				 );
+				 SEGGER_RTT_printf(0, "Five:0x%X JC:0x%X TSW:0x%X SSW:0x%X Coder:0x%X LSWL:0x%X LSWR:0x%X\r\n",
+						 SamplingValue.Fivestick, SamplingValue.JoystickC,
+						 SamplingValue.ToggleSW, SamplingValue.ShipSW,
+						 SamplingValue.Coder, SamplingValue.LockSWL, SamplingValue.LockSWR
+				 );
+//				 SEGGER_RTT_printf(1, "SW1:0x%X SW2:0x%X SW3:0x%X SW4:0x%X SW5:0x%X SW6:0x%X SW7:0x%X SW8:0x%X SW9:0x%X SW10:0x%X Res:0x%X\r\n",
+//						 SamplingValue.SW1, SamplingValue.SW2, SamplingValue.SW3, SamplingValue.SW4, SamplingValue.SW5,
+//						 SamplingValue.SW6, SamplingValue.SW7, SamplingValue.SW8, SamplingValue.SW9, SamplingValue.SW10,
+//						 SamplingValue.Reserve
+//				 );
+			
+//			SEGGER_RTT_printf(0, "CH1: 0x%04X, CH2: 0x%04X, CH3: 0x%04X, CH4: 0x%04X, StickState: 0x%02X\r\n",
+//          (uint16_t)frameData.ch[0], (uint16_t)frameData.ch[1], (uint16_t)frameData.ch[2], (uint16_t)frameData.ch[3], frameData.stickState);
     }
 
 
 
     {
         //ËÄÏò
-        SamplingValue.JoystickX = ADC_Value[2];
-        SamplingValue.JoystickY = ADC_Value[3];
+        SamplingValue.JoystickX = ADC_Value[3];
+        SamplingValue.JoystickY = ADC_Value[2];
     }
 
     {

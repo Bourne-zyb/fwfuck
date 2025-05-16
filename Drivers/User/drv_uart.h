@@ -55,10 +55,12 @@ typedef struct __attribute__((packed))
 extern sUartPack   Uart2TxPacket;
 extern sSampling   SamplingValue;
 extern uint8_t Usart2_Rx_Data_buff[UASRT_BUFFER_SIZE];
-
+extern UART_HandleTypeDef huart1;
+extern DMA_HandleTypeDef hdma_usart1_rx;
 
 void UART2_Init(  uint8_t *pBuffer, uint16_t Len  );
 void Usart2_TxBackground( void );
 void Usart2_RxBackground( void );
+void MX_USART1_UART_Init(void);
 
 #endif

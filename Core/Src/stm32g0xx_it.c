@@ -23,6 +23,7 @@
 #include "System.h"
 #include "stm32g0xx_it.h"
 #include "stdint.h"
+#include "drv_uart.h"
 
 extern DMA_HandleTypeDef hdma_adc;
 
@@ -143,23 +144,33 @@ void DMA1_Channel1_IRQHandler(void)
   /* USER CODE END DMA1_Channel1_IRQn 1 */
 }
 
+
 /**
   * @brief This function handles DMA1 channel 2 and channel 3 interrupts.
   */
-// void DMA1_Channel2_3_IRQHandler(void)
-// {
+ void DMA1_Channel2_3_IRQHandler(void)
+ {
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 0 */
 
+	 
   /* USER CODE END DMA1_Channel2_3_IRQn 0 */
-  // HAL_DMA_IRQHandler(&hdma_spi2_rx);
+   HAL_DMA_IRQHandler(&hdma_usart1_rx);
   /* USER CODE BEGIN DMA1_Channel2_3_IRQn 1 */
 
   /* USER CODE END DMA1_Channel2_3_IRQn 1 */
-// }
+ }
 
 /* USER CODE BEGIN 1 */
 
+void USART1_IRQHandler(void)
+{
+  /* USER CODE BEGIN USART1_IRQn 0 */
 
+  /* USER CODE END USART1_IRQn 0 */
+  HAL_UART_IRQHandler(&huart1);
+  /* USER CODE BEGIN USART1_IRQn 1 */
 
+  /* USER CODE END USART1_IRQn 1 */
+}
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
