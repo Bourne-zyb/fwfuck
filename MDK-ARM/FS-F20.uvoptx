@@ -157,50 +157,66 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>115</LineNumber>
+          <LineNumber>200</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134235778</Address>
+          <Address>134220028</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/stm32g0xx_it.c</Filename>
+          <Filename>..\User\System.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\FS_F20\../Core/Src/stm32g0xx_it.c\115</Expression>
+          <Expression>\\FS_F20\../User/System.c\200</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>141</LineNumber>
+          <LineNumber>206</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221998</Address>
+          <Address>134220048</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/stm32g0xx_it.c</Filename>
+          <Filename>..\User\System.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\FS_F20\../Core/Src/stm32g0xx_it.c\141</Expression>
+          <Expression>\\FS_F20\../User/System.c\206</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>152</LineNumber>
+          <LineNumber>212</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134222012</Address>
+          <Address>134220068</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>../Core/Src/stm32g0xx_it.c</Filename>
+          <Filename>..\User\System.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\FS_F20\../Core/Src/stm32g0xx_it.c\152</Expression>
+          <Expression>\\FS_F20\../User/System.c\212</Expression>
+        </Bp>
+        <Bp>
+          <Number>3</Number>
+          <Type>0</Type>
+          <LineNumber>217</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134220088</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\User\System.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\FS_F20\../User/System.c\217</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -233,6 +249,11 @@
           <count>5</count>
           <WinNumber>1</WinNumber>
           <ItemText>datarecv111</ItemText>
+        </Ww>
+        <Ww>
+          <count>6</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>SamplingValue</ItemText>
         </Ww>
       </WatchWindow1>
       <MemoryWindow1>

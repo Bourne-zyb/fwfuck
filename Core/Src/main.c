@@ -113,6 +113,7 @@ int main(void)
 	{
 		//if ( SYS_SysTickMs - Real_Time_Task > 10 )
 		{
+			//HAL_Delay(10);
 			ADC_RefreshValues();
 		//	Real_Time_Task = SYS_SysTickMs;
 			Channel_Calculate();

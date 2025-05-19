@@ -12,10 +12,10 @@
 
 typedef struct __attribute__((packed))
 {
-    uint16_t LHallstickX;       /* ×ó»ô¶ûÒ¡¸ËXÖá */
-    uint16_t LHallstickY;       /* ×ó»ô¶ûÒ¡¸ËYÖá */
-    uint16_t RHallstickX;       /* ÓÒ»ô¶ûÒ¡¸ËXÖá */
-    uint16_t RHallstickY;       /* ÓÒ»ô¶ûÒ¡¸ËYÖá */
+    int16_t LHallstickX;       /* ×ó»ô¶ûÒ¡¸ËXÖá */
+    int16_t LHallstickY;       /* ×ó»ô¶ûÒ¡¸ËYÖá */
+    int16_t RHallstickX;       /* ÓÒ»ô¶ûÒ¡¸ËXÖá */
+    int16_t RHallstickY;       /* ÓÒ»ô¶ûÒ¡¸ËYÖá */
     uint16_t JoystickX;         /* ËÄÏòĞ¡Ò¡¸ËXÖá */
     uint16_t JoystickY;         /* ËÄÏòĞ¡Ò¡¸ËYÖá */
     uint16_t RotaryVR1;         /* ×Ô»ØÖĞ²¦ÂÖ¼üVR1 */
