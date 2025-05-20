@@ -50,8 +50,16 @@ void build_pwm_buffer_1(void)
         pwm_dma_buf[i++] = 0;  // 占空比为 0%
     }
 
+		// 每个 LED 写入 PWM 波形
+    for (int led = 0; led < 1; led++) {
+
+        uint8_t r = 255, g = 0, b = 0;
+        set_rgb_color(r, g, b, &pwm_dma_buf[i]);
+        i += BITS_PER_LED;
+    }
+		
     // 每个 LED 写入 PWM 波形
-    for (int led = 0; led < LED_NUM; led++) {
+    for (int led = 1; led < LED_NUM; led++) {
 
         uint8_t r = 0, g = 255, b = 0;
         set_rgb_color(r, g, b, &pwm_dma_buf[i]);

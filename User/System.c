@@ -248,19 +248,19 @@ void Channel_Calculate( void )
 
     {
         //five
-        if ( (ADC_Value[4] < FIVESTICKL_UP_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKL_UP_ADC - DEADZONE) )
+        if ( (ADC_Value[4] < FIVESTICK_UP_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICK_UP_ADC - DEADZONE) )
         {
             SamplingValue.Fivestick = 1;
         }
-        else if ( (ADC_Value[4] < FIVESTICKL_DOWN_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKL_DOWN_ADC - DEADZONE) )
+        else if ( (ADC_Value[4] < FIVESTICK_DOWN_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICK_DOWN_ADC - DEADZONE) )
         {
             SamplingValue.Fivestick = 2;
         }
-        else if ( (ADC_Value[4] < FIVESTICKR_UP_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKR_UP_ADC - DEADZONE) )
+        else if ( (ADC_Value[4] < FIVESTICK_L_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICK_L_ADC - DEADZONE) )
         {
             SamplingValue.Fivestick = 3;
         }
-        else if ( (ADC_Value[4] < FIVESTICKR_DOWN_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICKR_DOWN_ADC - DEADZONE) )
+        else if ( (ADC_Value[4] < FIVESTICK_R_ADC + DEADZONE) && (ADC_Value[4] > FIVESTICK_R_ADC - DEADZONE) )
         {
             SamplingValue.Fivestick = 4;
         }
