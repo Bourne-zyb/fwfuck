@@ -11,7 +11,7 @@ Function:
 Input:
 Output:
 ==================================================================================================*/
-void AW9523_Init( void )
+void AW9523_Init_not( void )
 {
     uint8_t Result;
     uint32_t Count = 0;

@@ -41,7 +41,7 @@ typedef enum
 #define KEY_LED10_ON()       Expander_Gpio_Write_Bit( AW9523_P0, GPIO_PIN_5, 1 );
 #define KEY_LED10_OFF()      Expander_Gpio_Write_Bit( AW9523_P0, GPIO_PIN_5, 0 );
 
-void AW9523_Init( void );
+void AW9523_Init_not( void );
 
 
 #endif

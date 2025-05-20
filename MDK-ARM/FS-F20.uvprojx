@@ -340,7 +340,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32G070xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;..\Core\Src;..\Drivers\User;..\User;..\Core\rtt</IncludePath>
+              <IncludePath>../Core/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc;../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy;../Drivers/CMSIS/Device/ST/STM32G0xx/Include;../Drivers/CMSIS/Include;..\Core\Src;..\Drivers\User;..\User;..\Core\rtt;..\Core\LED_AW95</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -423,6 +423,21 @@
               <FileName>crc8.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Src\crc8.c</FilePath>
+            </File>
+            <File>
+              <FileName>tim.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Src\tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>LED_AW95.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\LED_AW95\LED_AW95.c</FilePath>
+            </File>
+            <File>
+              <FileName>i2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Core\Inc\i2c.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -589,11 +604,6 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\User\drv_buzzer.c</FilePath>
             </File>
-            <File>
-              <FileName>drv_i2c.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Drivers\User\drv_i2c.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>
@@ -608,11 +618,6 @@
               <FileName>ring_buffer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\User\ring_buffer.c</FilePath>
-            </File>
-            <File>
-              <FileName>IO_Expander.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\User\IO_Expander.c</FilePath>
             </File>
           </Files>
         </Group>

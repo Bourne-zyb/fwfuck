@@ -289,9 +289,9 @@ void Channel_Calculate( void )
 
         if ( Last_StateA != Current_StateA )
         {
-            if ( SYS_SysTickMs - State_Ms > 30 )
+            if ( uwTick - State_Ms > 30 )
             {
-                State_Ms = SYS_SysTickMs;
+                State_Ms = uwTick;
                 if ( Current_StateA == Current_StateB )
                 {
                     SamplingValue.Coder = 0;//Left
@@ -303,7 +303,7 @@ void Channel_Calculate( void )
             }
             Last_StateA = Current_StateA;
         }
-        else if ( (Last_StateA == Current_StateA) && SYS_SysTickMs - State_Ms > 500 )
+        else if ( (Last_StateA == Current_StateA) && uwTick - State_Ms > 500 )
         {
             SamplingValue.Coder = 1;
         }
