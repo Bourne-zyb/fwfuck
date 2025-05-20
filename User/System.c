@@ -282,31 +282,9 @@ void Channel_Calculate( void )
     }
 
     {//VR3
-        static uint32_t State_Ms;
-        static uint8_t Last_StateA;
-        uint8_t Current_StateA = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_14);
-        uint8_t Current_StateB = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15);
-
-        if ( Last_StateA != Current_StateA )
-        {
-            if ( uwTick - State_Ms > 30 )
-            {
-                State_Ms = uwTick;
-                if ( Current_StateA == Current_StateB )
-                {
-                    SamplingValue.Coder = 0;//Left
-                }
-                else
-                {
-                    SamplingValue.Coder = 2;//Right
-                }
-            }
-            Last_StateA = Current_StateA;
-        }
-        else if ( (Last_StateA == Current_StateA) && uwTick - State_Ms > 500 )
-        {
-            SamplingValue.Coder = 1;
-        }
+       
+//				SamplingValue.Coder = 0;//Left
+//				SamplingValue.Coder = 2;//Right        
     }
 
 

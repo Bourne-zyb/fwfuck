@@ -141,6 +141,8 @@ void Usart2_TxBackground( void )
 //    SEGGER_RTT_printf(0, "Send Data: %s\n", hex_str);
 
     UART2_Transmit((unsigned char*)&Uart2TxPacket, sizeof(sUartPack));
+	
+		SamplingValue.Coder = 1;
 }
 
 

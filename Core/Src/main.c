@@ -103,10 +103,12 @@ void HAL_GPIO_EXTI_Rising_Callback(uint16_t GPIO_Pin)
 		if(HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_15) == GPIO_PIN_RESET)
 		{
 				SEGGER_RTT_printf(1, "LLLLLLLLLL\r\n");
+				SamplingValue.Coder = 0;//Left	  
 		}
 		else
 		{
 				SEGGER_RTT_printf(1, "RRRRRRRRRRR\r\n");
+				SamplingValue.Coder = 2;//Right  
 		}
   }
 }
@@ -248,19 +250,18 @@ int main(void)
 	//I2C_Init();
 	//AW9523_Init();
 
-	 build_pwm_buffer();
+	build_pwm_buffer();
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4, (uint32_t *)pwm_dma_buf, TOTAL_SLOTS);
-		HAL_Delay(10);
+	HAL_Delay(10);
 	build_pwm_buffer_1();
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4, (uint32_t *)pwm_dma_buf, TOTAL_SLOTS);//
 	HAL_Delay(10);
 	
-	  __HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 2500);
+	__HAL_TIM_SET_COMPARE(&htim3, TIM_CHANNEL_2, 2500);
   //开启TIM3 PWM输出
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_2);
   //关闭TIM3 PWM输出
   HAL_TIM_PWM_Stop(&htim3, TIM_CHANNEL_2);
-  // 设置PWM占空比为50%
 	
 	
 	
