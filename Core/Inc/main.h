@@ -50,22 +50,6 @@ extern uint16_t ADC_Sampling[5];
 void Error_Handler(void);
 
 
-#define FRAME_HEADER_0   0x55
-#define FRAME_HEADER_1   0xC4
-#define FRAME_HEADER_2   0x09
-#define FRAME_SIZE       14
-#define PAYLOAD_SIZE     9
-#define FRAME_ERR       0xff
-
-typedef struct {
-    int16_t ch[4];       // CH1 ~ CH4
-    uint8_t stickState;  // Stick ״̬
-} FrameData_t;
-
-extern uint8_t datarecv111[28];
-extern  FrameData_t frameData;
-int extract_valid_frame(uint8_t *buf, size_t len, FrameData_t *outFrame);
-
 #ifdef __cplusplus
 }
 #endif

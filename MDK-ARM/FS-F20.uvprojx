@@ -430,11 +430,6 @@
               <FilePath>..\Core\Src\tim.c</FilePath>
             </File>
             <File>
-              <FileName>LED_AW95.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Core\LED_AW95\LED_AW95.c</FilePath>
-            </File>
-            <File>
               <FileName>i2c.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Core\Inc\i2c.c</FilePath>
@@ -603,6 +598,16 @@
               <FileName>drv_buzzer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Drivers\User\drv_buzzer.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_LED_AW95.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\User\drv_LED_AW95.c</FilePath>
+            </File>
+            <File>
+              <FileName>drv_LED_RGB.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\User\drv_LED_RGB.c</FilePath>
             </File>
           </Files>
         </Group>

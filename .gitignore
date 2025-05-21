@@ -20,3 +20,5 @@ Drivers/CMSIS
 *.bin
 *.exe
 Drivers/STM32G0xx_HAL_Driver
+*.ZhangYiBo
+MDK-ARM/JLinkLog.txt

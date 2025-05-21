@@ -26,8 +26,6 @@
  extern "C" {
 #endif
 
-extern volatile unsigned long SYS_SysTickMs;
-
 
 void NMI_Handler(void);
 void SysTick_Handler(void);

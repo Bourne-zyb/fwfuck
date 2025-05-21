@@ -1,6 +1,6 @@
 /****************************************************************************** 
- * @file    LED_AW95.c 
- * @brief   LED_AW95 module implementation.
+ * @file    drv_LED_AW95.c
+ * @brief   AW9523 LED driver module implementation.
  * @author  Jason 
  * @version V1.0.0 
  * @date    2025-05
@@ -8,7 +8,7 @@
  ******************************************************************************/
 
 /* Includes ------------------------------------------------------------------*/ 
-#include "LED_AW95.h"
+#include "drv_LED_AW95.h"
 #include "i2c.h"
 /* Private typedef -----------------------------------------------------------*/ 
 
@@ -25,12 +25,13 @@ static const uint8_t LED2DIM[] = {DIM0,DIM1,DIM2,DIM3,DIM4,DIM5,DIM6,DIM7,DIM8,D
 /* Private function prototypes -----------------------------------------------*/ 
 static __INLINE HAL_StatusTypeDef Local_Hal_I2C_Read(uint8_t regaddr,uint8_t* buf,uint8_t length);
 static __INLINE HAL_StatusTypeDef Local_Hal_I2C_Write(uint8_t regaddr,uint8_t* buf,uint8_t length);
-int AW9523_Init(void);
-int AW9523_SetBrightness(uint8_t channel,uint8_t brightness);
-int AW9523_SetAllBrightness(uint8_t brightness);
-int  AW9523_SoftReset(void);
-void AW9523_HWReset(void);
-int AW9523_Restart(void);
+void LED_AW9523_Init(void);
+int LED_AW9523_cfg(void);
+int LED_AW9523_SetBrightness(uint8_t channel, uint8_t brightness);
+int LED_AW9523_SetAllBrightness(uint8_t brightness);
+int LED_AW9523_SoftReset(void);
+void LED_AW9523_HWReset(void);
+int LED_AW9523_Restart(void);
 
 /* Private functions ---------------------------------------------------------*/ 
 
@@ -60,7 +61,12 @@ static __INLINE HAL_StatusTypeDef Local_Hal_I2C_Write(uint8_t regaddr,uint8_t* b
 /*
 芯片初始化
 */
-int AW9523_Init(void)
+void LED_AW9523_Init(void)
+{
+  MX_I2C1_Init();
+}
+
+int LED_AW9523_cfg(void)
 {
   uint8_t val = 0;
   uint8_t ret = 0;
@@ -69,7 +75,7 @@ int AW9523_Init(void)
    * AW9523B support 3 reset mode: power on reset, hardware reset, 
    * software reset. Each reset mode can reset registers to default value
    */
-  if(AW9523_SoftReset() < 0) return -1;
+  if(LED_AW9523_SoftReset() < 0) return -1;
 
   //read chip id
   ret         = Local_Hal_I2C_Read(ID,&val,1);
@@ -93,7 +99,7 @@ int AW9523_Init(void)
   if(ret != HAL_OK) return -1;
   
   //关闭电流
-  AW9523_SetAllBrightness(0);
+  LED_AW9523_SetAllBrightness(0);
 
   //16脚上电默认输出状态由AD1/AD0决定,故上电后全导通
   //P0 led breakover
@@ -114,7 +120,7 @@ int AW9523_Init(void)
 channel:   0----15
 brightness:0----255
 */
-int AW9523_SetBrightness(uint8_t channel,uint8_t brightness)
+int LED_AW9523_SetBrightness(uint8_t channel,uint8_t brightness)
 {	
   uint8_t val = 0;
   uint8_t ret = 0;
@@ -130,7 +136,7 @@ int AW9523_SetBrightness(uint8_t channel,uint8_t brightness)
 多通道亮度调节,统一控制
 brightness:0----255
 */
-int AW9523_SetAllBrightness(uint8_t brightness)
+int LED_AW9523_SetAllBrightness(uint8_t brightness)
 {
   uint8_t i;
   uint8_t ret = 0;
@@ -145,7 +151,7 @@ int AW9523_SetAllBrightness(uint8_t brightness)
 }
 
 //软件复位
-int  AW9523_SoftReset(void)
+int  LED_AW9523_SoftReset(void)
 {
   uint8_t val;
   uint8_t ret = 0;
@@ -158,28 +164,17 @@ int  AW9523_SoftReset(void)
 }
 
 //硬件复位
-void AW9523_HWReset(void)
+void LED_AW9523_HWReset(void)
 {
-   GPIO_InitTypeDef  GPIO_InitStruct;
-      
-  //  LED_HWRESET_CLK_ENABLE();
-            
-  //  GPIO_InitStruct.Pin       = LED_HWRESET_PIN;
-  //  GPIO_InitStruct.Mode      = GPIO_MODE_AF_PP;
-  //  GPIO_InitStruct.Pull      = GPIO_NOPULL;
-  //  GPIO_InitStruct.Speed     = GPIO_SPEED_FREQ_HIGH;
-      
-  //  HAL_GPIO_Init(LED_HWRESET_PORT, &GPIO_InitStruct);
-     
    //RSTN
    HAL_GPIO_WritePin(LED_HWRESET_PORT,LED_HWRESET_PIN,GPIO_PIN_RESET);
    HAL_Delay(1);
    HAL_GPIO_WritePin(LED_HWRESET_PORT,LED_HWRESET_PIN,GPIO_PIN_SET);
-   HAL_Delay(1);
+   HAL_Delay(100);
 }
 
 //防止该芯片意外复位
-int AW9523_Restart(void)
+int LED_AW9523_Restart(void)
 {
    uint8_t val = 0xFF;
   
@@ -187,8 +182,8 @@ int AW9523_Restart(void)
    while(Local_Hal_I2C_Read(GCR,&val,1) != HAL_OK){}
        
    if(val != 0x00) return -1;
-  
-   while(AW9523_Init());
+		 
+   while(LED_AW9523_cfg());
        
    return 0;
 }

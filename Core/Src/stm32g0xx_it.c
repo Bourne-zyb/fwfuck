@@ -26,9 +26,8 @@
 #include "drv_uart.h"
 
 extern DMA_HandleTypeDef hdma_adc;
-
-volatile unsigned long SYS_SysTickMs;
-extern void HallSticksTask( void );
+extern DMA_HandleTypeDef hdma_tim1_ch4;
+extern UART_HandleTypeDef huart1;
 
 void NMI_Handler(void)
 {
@@ -110,8 +109,7 @@ void EXTI4_15_IRQHandler(void)
 
   /* USER CODE END EXTI4_15_IRQn 1 */
 }
-extern DMA_HandleTypeDef hdma_tim1_ch4;
-extern UART_HandleTypeDef huart1;
+
 void DMA1_Ch4_7_DMAMUX1_OVR_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Ch4_7_DMAMUX1_OVR_IRQn 0 */
@@ -121,17 +119,6 @@ void DMA1_Ch4_7_DMAMUX1_OVR_IRQHandler(void)
   /* USER CODE BEGIN DMA1_Ch4_7_DMAMUX1_OVR_IRQn 1 */
 
   /* USER CODE END DMA1_Ch4_7_DMAMUX1_OVR_IRQn 1 */
-}
-void TIM6_IRQHandler(void)
-{
-		TIM6->SR=~TIM_SR_UIF;
-		SYS_SysTickMs++;
-    ADC_RefreshValues();
-    HallSticksTask();
-
-  // static uint8_t ToggleFlag;
-  // HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, ToggleFlag? GPIO_PIN_SET : GPIO_PIN_RESET );
-  // ToggleFlag = !ToggleFlag;
 }
 
 

@@ -1,6 +1,6 @@
 /******************************************************************************
- * @file    LED_AW95.h
- * @brief   Header file for LED_AW95 module
+ * @file    drv_LED_AW95.h
+ * @brief   Header file for drv_LED_AW95 module
  * @author  Jason
  * @version V1.0.0
  * @date    2025-5
@@ -14,6 +14,11 @@
 #include "main.h"
 
 /* Exported constants --------------------------------------------------------*/
+
+#define BRIGHTNESS_MAX                (255)
+#define BRIGHTNESS_MIN                (0)
+
+
 #define READ_TIMOUT                     (300)
 #define I2C_ADDRESS                     (0xB6)
 #define AW_I2C_RETRIES                  (5)
@@ -64,11 +69,12 @@
 /* Exported variables --------------------------------------------------------*/
 
 /* Exported function prototypes ----------------------------------------------*/
-int AW9523_Init(void);
-int AW9523_SetBrightness(uint8_t channel, uint8_t brightness);
-int AW9523_SetAllBrightness(uint8_t brightness);
-int AW9523_SoftReset(void);
-void AW9523_HWReset(void);
-int AW9523_Restart(void);
+void LED_AW9523_Init(void);
+int LED_AW9523_cfg(void);
+int LED_AW9523_SetBrightness(uint8_t channel, uint8_t brightness);
+int LED_AW9523_SetAllBrightness(uint8_t brightness);
+int LED_AW9523_SoftReset(void);
+void LED_AW9523_HWReset(void);
+int LED_AW9523_Restart(void);
 
 #endif /* __LED_AW95_H */

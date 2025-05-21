@@ -1,4 +1,3 @@
-#include "main.h"
 #include "System.h"
 #include "drv_uart.h"
 

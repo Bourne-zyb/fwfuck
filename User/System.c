@@ -8,9 +8,6 @@
 #include "drv_hall.h"
 
 
-uint16_t PinState[15];
-
-
 
 uint16_t ADC_Value_Temp[5][5];
 uint16_t ADC_Value[5];
@@ -164,76 +161,11 @@ void LockKey_Handle( GPIO_TypeDef *GPIO, uint16_t GPIO_Pin, uint8_t Index )
 
 void Channel_Calculate( void )
 {
-
-    PinState[0] = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4);
     {
         //»ô¶ûmini	
-        //HAL_UART_Receive_IT(&huart1, datarecv111, 28);
-				if(HAL_OK == HAL_UART_Receive(&huart1, datarecv111, 28, 20)){
-					if(1 == extract_valid_frame(datarecv111, 28, &frameData)){
-            if((frameData.stickState & 0x01) == 0x01){
-                SamplingValue.LHallstickX = frameData.ch[0];
-                SamplingValue.LHallstickY = frameData.ch[1];
-            }else{
-                SamplingValue.LHallstickX = FRAME_ERR;
-                SamplingValue.LHallstickY = FRAME_ERR;
-            }
-            if((frameData.stickState & 0x10) == 0x10){
-                SamplingValue.RHallstickX = frameData.ch[2];
-                SamplingValue.RHallstickY = frameData.ch[3];
-            }else{
-                SamplingValue.RHallstickX = FRAME_ERR;
-                SamplingValue.RHallstickY = FRAME_ERR;
-            }
-					}
-					SEGGER_RTT_printf(0, "LHX:0x%04X LHY:0x%04X RHX:0x%04X RHY:0x%04X JX:0x%04X JY:0x%04X VR1:0x%04X VR2:0x%04X\r\n",
-					 SamplingValue.LHallstickX, SamplingValue.LHallstickY,
-					 SamplingValue.RHallstickX, SamplingValue.RHallstickY,
-					 SamplingValue.JoystickX, SamplingValue.JoystickY,
-					 SamplingValue.RotaryVR1, SamplingValue.RotaryVR2
-					);
-				}else{
-					
-					// (Framing Error)
-					if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_FE))
-					{
-							__HAL_UART_CLEAR_FEFLAG(&huart1);
-					}
-
-					// (Noise Error)
-					if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_NE))
-					{
-							__HAL_UART_CLEAR_NEFLAG(&huart1);
-					}
-
-					// (Overrun Error)
-					if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_ORE))
-					{
-							__HAL_UART_CLEAR_OREFLAG(&huart1);
-					}
-					
-					if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_ORE))
-					{
-							__HAL_UART_CLEAR_OREFLAG(&huart1);
-					}
-				
-					
-					SEGGER_RTT_printf(0, "hall err!!! JX:0x%04X JY:0x%04X VR1:0x%04X VR2:0x%04X\r\n",
-					 SamplingValue.LHallstickX, SamplingValue.LHallstickY,
-					 SamplingValue.RHallstickX, SamplingValue.RHallstickY,
-					 SamplingValue.JoystickX, SamplingValue.JoystickY,
-					 SamplingValue.RotaryVR1, SamplingValue.RotaryVR2
-					);
-				}
-				SEGGER_RTT_printf(0, "Five:0x%X JC:0x%X TSW:0x%X SSW:0x%X Coder:0x%X LSWL:0x%X LSWR:0x%X\r\n",
-				 SamplingValue.Fivestick, SamplingValue.JoystickC,
-				 SamplingValue.ToggleSW, SamplingValue.ShipSW,
-				 SamplingValue.Coder, SamplingValue.LockSWL, SamplingValue.LockSWR
-				);
+        HALL_getvalue_start_once();
     }
-
-
-
+		
     {
         //ËÄÏò
         SamplingValue.JoystickX = ADC_Value[3];

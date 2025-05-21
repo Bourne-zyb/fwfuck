@@ -3,6 +3,12 @@
     "files.autoGuessEncoding": true,
     "files.encoding": "gb2312",
     "files.associations": {
-        "main.h": "c"
+        "main.h": "c",
+        "drv_hall.h": "c",
+        "segger_rtt.h": "c",
+        "drv_buzzer.h": "c",
+        "tim.h": "c",
+        "drv_led_rgb.h": "c",
+        "drv_led_aw95.h": "c"
     }
 }

@@ -1,6 +1,8 @@
 #ifndef __DRV_UART_H__
 #define __DRV_UART_H__
 
+#include "main.h"
+
 #define UASRT_START_FLAG            0x5A
 #define UASRT_END_FLAG              0xAF
 #define UASRT_BUFFER_SIZE           0x18
@@ -9,6 +11,7 @@
 #define USART_CMD_FIRMWARE_UPDATE          0XA1
 #define USART_CMD_FACTORY_LIGHTTEST        0xA2
 #define USART_CMD_FACTORY_BUZZERTEST       0xA3
+
 
 typedef struct __attribute__((packed))
 {
@@ -57,6 +60,7 @@ extern sSampling   SamplingValue;
 extern uint8_t Usart2_Rx_Data_buff[UASRT_BUFFER_SIZE];
 extern UART_HandleTypeDef huart1;
 extern DMA_HandleTypeDef hdma_usart1_rx;
+
 
 void UART2_Init(  uint8_t *pBuffer, uint16_t Len  );
 void Usart2_TxBackground( void );
