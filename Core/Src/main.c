@@ -16,6 +16,7 @@
 #include "SEGGER_RTT.h"
 #include "tim.h"
 #include "LED_AW95.h"
+#include "i2c.h"
 
 /* USER CODE BEGIN PTD */
 #define LED_NUM        5
@@ -53,7 +54,8 @@ void build_pwm_buffer_1(void)
 		// 每个 LED 写入 PWM 波形
     for (int led = 0; led < 1; led++) {
 
-        uint8_t r = 255, g = 0, b = 0;
+       // uint8_t r = 255, g = 0, b = 50;
+				uint8_t r = 0, g = 0, b = 50; // RGB for light pink (??)
         set_rgb_color(r, g, b, &pwm_dma_buf[i]);
         i += BITS_PER_LED;
     }
@@ -61,7 +63,8 @@ void build_pwm_buffer_1(void)
     // 每个 LED 写入 PWM 波形
     for (int led = 1; led < LED_NUM; led++) {
 
-        uint8_t r = 0, g = 255, b = 0;
+       // uint8_t r = 0, g = 255, b = 0;
+				int8_t r = 0, g = 10, b = 0; // RGB for light green
         set_rgb_color(r, g, b, &pwm_dma_buf[i]);
         i += BITS_PER_LED;
     }
@@ -233,10 +236,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         }
 			
 			SEGGER_RTT_printf(0, "CH1: 0x%04X, CH2: 0x%04X, CH3: 0x%04X, CH4: 0x%04X, StickState: 0x%02X\r\n",
-          (uint16_t)frameData.ch[0], (uint16_t)frameData.ch[1], (uint16_t)frameData.ch[2], (uint16_t)frameData.ch[3], frameData.stickState);
-  
-        //HAL_UART_Receive_IT(&huart1, datarecv111, 28);
-			
+          (uint16_t)frameData.ch[0], (uint16_t)frameData.ch[1], (uint16_t)frameData.ch[2], (uint16_t)frameData.ch[3], frameData.stickState);		
     }
 }
 
@@ -255,8 +255,6 @@ int main(void)
 	MX_TIM3_Init();
   MX_I2C1_Init();
   MX_TIM1_Init();
-	//I2C_Init();
-	//AW9523_Init();
 
 	build_pwm_buffer();
 	HAL_TIM_PWM_Start_DMA(&htim1, TIM_CHANNEL_4, (uint32_t *)pwm_dma_buf, TOTAL_SLOTS);
@@ -306,8 +304,7 @@ int main(void)
 
 void SystemClock_Config(void)
 {
-
-	 RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+	RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
 
   /** Configure the main internal regulator output voltage

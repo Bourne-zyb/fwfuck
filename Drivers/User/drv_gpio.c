@@ -57,7 +57,7 @@ void MX_GPIO_Init( void )
     /*Configure GPIO pins : PB11 PB12 PB13 PB14
                             PB15 PB3 PB4 PB5 */
     GPIO_InitStruct.Pin = GPIO_PIN_11|GPIO_PIN_12|GPIO_PIN_13
-                            |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4;
+                            |GPIO_PIN_15|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
